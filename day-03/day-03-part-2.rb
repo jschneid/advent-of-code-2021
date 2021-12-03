@@ -21,30 +21,17 @@ def least_common_value_at_position(diagnostic_report_records, position)
   most_common_value_at_position(diagnostic_report_records, position) == '0' ? '1' : '0'
 end
 
-def calculate_oxygen_generator_rating(diagnostic_report)
-  possible_oxygen_generator_ratings = diagnostic_report.dup
+def calculate_rating(diagnostic_report, common_value_function)
+  rating_candidates = diagnostic_report.dup
 
   (0..diagnostic_report[0].length - 1).each do |position|
-    break if possible_oxygen_generator_ratings.length == 1
+    break if rating_candidates.length == 1
 
-    common_value = most_common_value_at_position(possible_oxygen_generator_ratings, position)
-    possible_oxygen_generator_ratings = possible_oxygen_generator_ratings.select { |rating| rating[position] == common_value }
+    common_value = common_value_function.call(rating_candidates, position)
+    rating_candidates = rating_candidates.select { |rating| rating[position] == common_value }
   end
 
-  possible_oxygen_generator_ratings[0]
-end
-
-def calculate_co2_scrubber_rating(diagnostic_report)
-  possible_co2_scrubber_ratings = diagnostic_report.dup
-
-  (0..diagnostic_report[0].length - 1).each do |position|
-    break if possible_co2_scrubber_ratings.length == 1
-
-    least_common_value = least_common_value_at_position(possible_co2_scrubber_ratings, position)
-    possible_co2_scrubber_ratings = possible_co2_scrubber_ratings.select { |rating| rating[position] == least_common_value }
-  end
-
-  possible_co2_scrubber_ratings[0]
+  rating_candidates[0]
 end
 
 def calculate_life_support_rating(oxygen_generator_rating, co2_scrubber_rating)
@@ -52,6 +39,6 @@ def calculate_life_support_rating(oxygen_generator_rating, co2_scrubber_rating)
 end
 
 diagnostic_report = read_diagnostic_report
-oxygen_generator_rating = calculate_oxygen_generator_rating(diagnostic_report)
-co2_scrubber_rating = calculate_co2_scrubber_rating(diagnostic_report)
+oxygen_generator_rating = calculate_rating(diagnostic_report, method(:most_common_value_at_position))
+co2_scrubber_rating = calculate_rating(diagnostic_report, method(:least_common_value_at_position))
 p calculate_life_support_rating(oxygen_generator_rating, co2_scrubber_rating)
