@@ -13,39 +13,24 @@ def parse_line(line)
   (point1 + point2)
 end
 
-def add_horizontal_line(grid, x1, x2, y)
-  (x1..x2).each do |x|
+def add_line(grid, x1, y1, x2, y2)
+  x = x1
+  y = y1
+  loop do
     grid[y][x] += 1
-  end
-end
 
-def add_vertical_line(grid, x, y1, y2)
-  (y1..y2).each do |y|
-    grid[y][x] += 1
-  end
-end
+    break if x == x2 && y == y2
 
-def add_nw_se_diagonal(grid, x, y1, y2)
-  (y1..y2).each do |y|
-    grid[y][x] += 1
-    x += 1
-  end
-end
-
-def add_ne_sw_diagonal(grid, x, y1, y2)
-  (y1..y2).each do |y|
-    grid[y][x] += 1
-    x -= 1
+    y += 1 if y1 < y2
+    x += 1 if x1 < x2
+    x -= 1 if x2 < x1
   end
 end
 
 def add_lines_to_grid(grid, lines)
   lines.each do |line|
     x1, y1, x2, y2 = parse_line(line)
-    add_horizontal_line(grid, x1, x2, y1) if y1 == y2
-    add_vertical_line(grid, x1, y1, y2) if x1 == x2
-    add_nw_se_diagonal(grid, x1, y1, y2) if y1 < y2 && x1 < x2
-    add_ne_sw_diagonal(grid, x1, y1, y2) if y1 < y2 && x2 < x1
+    add_line(grid, x1, y1, x2, y2)
   end
 end
 
