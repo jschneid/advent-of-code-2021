@@ -3,15 +3,8 @@ def read_positions
 end
 
 def fuel_needed_for_move(position1, position2)
-  total_fuel_needed = 0
-  fuel_needed_for_next_move = 1
-  position1, position2 = position2, position1 if position2 < position1
-  while position1 < position2
-    total_fuel_needed += fuel_needed_for_next_move
-    fuel_needed_for_next_move += 1
-    position1 += 1
-  end
-  total_fuel_needed
+  distance = (position2 - position1).abs
+  (distance * (distance + 1)) / 2
 end
 
 def least_fuel_needed_for_alignment(positions)
