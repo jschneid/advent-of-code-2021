@@ -58,14 +58,14 @@ end
 def count_paths_to_end(caves, cave, visited_list)
   return 1 if cave.id == 'end'
 
-  visited_list.push(cave) unless cave.large?
+  visited_list.push(cave)
   paths_to_end_from_here = 0
 
   cave.exits.each do |next_cave|
-    paths_to_end_from_here += count_paths_to_end(caves, next_cave, visited_list) unless visited_list.include?(next_cave)
+    paths_to_end_from_here += count_paths_to_end(caves, next_cave, visited_list) unless visited_list.include?(next_cave) && !next_cave.large?
   end
 
-  visited_list.pop unless cave.large?
+  visited_list.pop
   paths_to_end_from_here
 end
 
